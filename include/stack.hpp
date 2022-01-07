@@ -4,9 +4,7 @@
 #include <vector>
 
 namespace ft {
-
-											//change to ft::vector<T>
-	template <class T, class Container = std::vector<T> >
+	template <class T, class Container = ft::vector<T> >
 	class stack {
 		protected:
 			Container _cont;
@@ -58,6 +56,5 @@ namespace ft {
 	bool operator<=(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
 		return lhs._cont <= rhs._cont;
 	}
-
-
+	
 } //ft namespace end

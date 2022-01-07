@@ -13,7 +13,7 @@ namespace ft {
 				typedef _Iterator										iterator_type;
 				typedef typename _iterator_traits::iterator_category	iterator_category;
 				typedef typename _iterator_traits::value_type 			value_type;
-				typedef typename _iterator_traits::distance_type		distance_type;
+				typedef typename _iterator_traits::difference_type		difference_type;
 				typedef typename _iterator_traits::reference 			reference;
 				typedef typename _iterator_traits::pointer 				pointer;
 
@@ -61,25 +61,25 @@ namespace ft {
 				return normal_iterator(_current--);
 			}
 
-			reference operator[](distance_type __dist) {
+			reference operator[](difference_type __dist) {
 				return _current[__dist];
 			}
 
-			normal_iterator& operator+=(distance_type __dist) {
+			normal_iterator& operator+=(difference_type __dist) {
 				_current += __dist;
 				return *this;
 			}
 
-			normal_iterator operator+(distance_type __dist) {
+			normal_iterator operator+(difference_type __dist) {
 				return normal_iterator(_current + __dist);
 			}
 
-			normal_iterator& operator-=(distance_type __dist) {
+			normal_iterator& operator-=(difference_type __dist) {
 				_current -= __dist;
 				return *this;
 			}
 
-			normal_iterator operator-(distance_type __dist) {
+			normal_iterator operator-(difference_type __dist) {
 				return normal_iterator(_current - __dist);
 			}
 
@@ -116,9 +116,9 @@ namespace ft {
 			return lhs.base() >= rhs.base();
 		}
 
-	template<class _Iter1>
+	template<class _Iter1, class _Iter2>
 		inline typename normal_iterator<_Iter1>::difference_type
-			operator-(const normal_iterator<_Iter1> &lhs, const normal_iterator<_Iter1> &rhs) {
+			operator-(const normal_iterator<_Iter1> &lhs, const normal_iterator<_Iter2> &rhs) {
 			return lhs.base() - rhs.base();
 		}
 
@@ -140,7 +140,7 @@ namespace ft {
 				typedef _Iterator										iterator_type;
 				typedef typename _iterator_traits::iterator_category	iterator_category;
 				typedef typename _iterator_traits::value_type 			value_type;
-				typedef typename _iterator_traits::distance_type		distance_type;
+				typedef typename _iterator_traits::difference_type		difference_type;
 				typedef typename _iterator_traits::reference 			reference;
 				typedef typename _iterator_traits::pointer 				pointer;
 
@@ -193,25 +193,25 @@ namespace ft {
 				return _tmp;
 			}
 
-			reference operator[](distance_type __dist) {
+			reference operator[](difference_type __dist) {
 				return *(*this + __dist);
 			}
 
-			reverse_iterator& operator+=(distance_type __dist) {
+			reverse_iterator& operator+=(difference_type __dist) {
 				_current -= __dist;
 				return *this;
 			}
 
-			reverse_iterator operator+(distance_type __dist) {
+			reverse_iterator operator+(difference_type __dist) {
 				return reverse_iterator(_current - __dist);
 			}
 
-			reverse_iterator& operator-=(distance_type __dist) {
+			reverse_iterator& operator-=(difference_type __dist) {
 				_current += __dist;
 				return *this;
 			}
 
-			reverse_iterator operator-(distance_type __dist) {
+			reverse_iterator operator-(difference_type __dist) {
 				return reverse_iterator(_current + __dist);
 			}
 
@@ -251,9 +251,9 @@ namespace ft {
 	//reverse_iterator end
 
 	//distance
-	template<class Iter>
-		inline typename iterator_traits<Iter>::distance_type
-		distance(Iter first, Iter last) {
+	template<class _Iter1, class _Iter2>
+		inline typename iterator_traits<_Iter1>::difference_type
+		distance(_Iter1 first, _Iter2 last) {
 			return last - first;
 		}
 

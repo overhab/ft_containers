@@ -19,14 +19,41 @@ int main(void) {
 	test.pop();
 	std::cout << "20 = " <<test.top() << std::endl; */
 
+
+	std::vector<int> for_fill(4, 42);
+
 	std::cout << "======STD::VECTOR TESTS======" << std::endl;
 
-	std::vector<int> vector(12);
-	
-	std::vector<int>::iterator r_it;
-	std::vector<int>::const_iterator r_const_it;
+	std::vector<int> vector(12, 12);
 
-	r_const_it = r_it;
+	vector.insert(vector.begin() + 3, for_fill.begin(), for_fill.end());
+	std::cout << "new capacity = " << vector	.capacity() << std::endl;
+	for (std::vector<int>::iterator it = vector.begin(); it != vector.end(); it++) {
+		std::cout << *it << " ";
+	}
+
+	std::cout << std::endl;
+/* 	int i2 = 0;
+
+	for (std::vector<int>::iterator it = vector.begin(); it != vector.end(); it++) {
+		*it = i2++;
+	}
+	for (std::vector<int>::iterator it = vector.begin(); it != vector.end(); it++) {
+		std::cout << *it << " ";
+	}
+	std::cout << std::endl;
+	std::cout << vector.size() << std::endl;
+
+	vector.erase(vector.begin() + 3);
+	for (std::vector<int>::iterator it = vector.begin(); it != vector.end(); it++) {
+		std::cout << *it << " ";
+	}
+	std::cout << std::endl;
+	std::cout << vector.size() << std::endl; */
+
+
+
+	//vector.at(12);
 /* 	int i = 0;
 
 	for (std::vector<int>::iterator it = vector.begin(); it != vector.end(); ++it) {
@@ -43,12 +70,36 @@ int main(void) {
 	////////////////////////////////////////////////////////////
 
 	std::cout << "======FT::VECTOR TESTS======" << std::endl;
-	ft::vector<int> my_vec(12);
+	ft::vector<int> my_vec(12, 12);
 
-	ft::vector<int>::iterator it;
-	ft::vector<int>::const_iterator const_it;
+	my_vec.insert(my_vec.begin() + 3, for_fill.begin(), for_fill.end());
+	std::cout << "new capacity = " << my_vec.capacity() << std::endl;
+	for (ft::vector<int>::iterator it = my_vec.begin(); it != my_vec.end(); it++) {
+		std::cout << *it << " ";
+	}
 
-	const_it = it;
+	std::cout << std::endl;
+
+/* 	int i = 0;
+
+	for (ft::vector<int>::iterator it = my_vec.begin(); it != my_vec.end(); it++) {
+		*it = i++;
+	}
+	for (ft::vector<int>::iterator it = my_vec.begin(); it != my_vec.end(); it++) {
+		std::cout << *it << " ";
+	}
+	std::cout << std::endl;
+	std::cout << my_vec.size() << std::endl;
+
+	my_vec.erase(my_vec.begin() + 3);
+	for (ft::vector<int>::iterator it = my_vec.begin(); it != my_vec.end(); it++) {
+		std::cout << *it << " ";
+	}
+	std::cout << std::endl;
+	std::cout << my_vec.size() << std::endl; */
+
+
+
 /* 	int i2 = 0;
 
 	for (ft::vector<int>::iterator it = my_vec.begin(); it != my_vec.end(); ++it) {

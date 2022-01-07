@@ -7,7 +7,7 @@ namespace ft {
 	template <class Category, class T, class Distance = std::ptrdiff_t, class Pointer = T*, class Reference = T&>
 		struct iterator {
 	    	typedef T         value_type;
-	    	typedef Distance  distance_type;
+	    	typedef Distance  difference_type;
 	    	typedef Pointer   pointer;
 	    	typedef Reference reference;
 	    	typedef Category  iterator_category;
@@ -28,7 +28,7 @@ namespace ft {
 		struct iterator_traits {
 			typedef typename It::iterator_category	iterator_category;
 			typedef typename It::value_type 		value_type;
-			typedef typename It::distance_type		distance_type;
+			typedef typename It::difference_type		difference_type;
 			typedef typename It::reference 			reference;
 			typedef typename It::pointer 			pointer;
 		};
@@ -37,7 +37,7 @@ namespace ft {
 		struct iterator_traits<T *> {
 			typedef ft::random_access_iterator_tag 	iterator_category;
 			typedef T 								value_type;
-			typedef std::ptrdiff_t 					distance_type;
+			typedef std::ptrdiff_t 					difference_type;
 			typedef T 								*pointer;
 			typedef T& 								reference;
 		};
@@ -46,7 +46,7 @@ namespace ft {
 		struct iterator_traits<const T *> {
 			typedef ft::random_access_iterator_tag 	iterator_category;
 			typedef T 								value_type;
-			typedef std::ptrdiff_t 					distance_type;
+			typedef std::ptrdiff_t 					difference_type;
 			typedef T 								*pointer;
 			typedef T& 								reference;
 		};
