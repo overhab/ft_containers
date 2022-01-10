@@ -146,15 +146,13 @@ namespace ft {
 
 	template<class _Iterator>
 		class reverse_iterator {
-			private:
-				typedef ft::iterator<ft::random_access_iterator_tag, _Iterator>	_iterator_traits;
 			public:
 				typedef _Iterator										iterator_type;
-				typedef typename _iterator_traits::iterator_category	iterator_category;
-				typedef typename _iterator_traits::value_type 			value_type;
-				typedef typename _iterator_traits::difference_type		difference_type;
-				typedef _Iterator& 			reference;
-				typedef _Iterator* 			pointer;
+				typedef typename ft::iterator_traits<_Iterator>::iterator_category	iterator_category;
+				typedef typename ft::iterator_traits<_Iterator>::value_type 		value_type;
+				typedef typename ft::iterator_traits<_Iterator>::difference_type	difference_type;
+				typedef typename ft::iterator_traits<_Iterator>::reference 		reference;
+				typedef typename ft::iterator_traits<_Iterator>::pointer			pointer;
 
 			private:
 				iterator_type  _current;
@@ -162,13 +160,9 @@ namespace ft {
 			public:
 			reverse_iterator() : _current() {}
 
-			reverse_iterator(const _Iterator &  a) : _current(a) {}
+			explicit reverse_iterator(iterator_type it) : _current(it) {}
 
 			reverse_iterator(const reverse_iterator& copy) : _current(copy._current) {}
-
-/* 			explicit reverse_iterator(iterator_type it) {
-				_current = &it;
-			} */
 
 			template<class _Iter>
 				reverse_iterator(const reverse_iterator<_Iter> &rhs) : _current(rhs.base()) {}
@@ -178,13 +172,13 @@ namespace ft {
 				return *this;
 			}
 
-			iterator_type base() const {
+			iterator_type  base() const {
 				return _current;
 			}
 
 			reference operator*() const {
-				iterator_type  _tmp = this->_current;
-				return *--_tmp;
+				iterator_type tmp = _current;
+				return *--tmp;
 			}
 
 			pointer operator->() const {
