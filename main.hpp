@@ -13,6 +13,7 @@
 # include <typeinfo>
 # include <cmath>
 # include <functional>
+# include <exception>
 
 
 // delete afterwards

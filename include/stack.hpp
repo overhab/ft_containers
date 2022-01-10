@@ -1,11 +1,20 @@
 #pragma once
 
 #include "Includes.hpp"
-#include <vector>
+#include "../include/vector.hpp"
 
 namespace ft {
 	template <class T, class Container = ft::vector<T> >
 	class stack {
+
+		template<typename _Tp1, typename _Seq1>
+			friend bool
+			operator==(const stack<_Tp1, _Seq1>&, const stack<_Tp1, _Seq1>&);
+
+		template<typename _Tp1, typename _Seq1>
+			friend bool
+			operator<(const stack<_Tp1, _Seq1>&, const stack<_Tp1, _Seq1>&);
+
 		protected:
 			Container _cont;
 
@@ -28,33 +37,33 @@ namespace ft {
 	**Operator overloads
 	*/
 	template <class T, class Container>
-	bool operator==(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
+	inline bool operator==(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
 		return lhs._cont == rhs._cont;
 	}
 
 	template <class T, class Container>
-	bool operator!=(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
-		return lhs._cont != rhs._cont;
+	inline bool operator!=(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
+		return !(lhs == rhs);
 	}
 
 	template <class T, class Container>
-	bool operator>(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
-		return lhs._cont > rhs._cont;
+	inline bool operator>(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
+		return rhs < lhs;
 	}
 
 	template <class T, class Container>
-	bool operator<(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
+	inline bool operator<(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
 		return lhs._cont < rhs._cont;
 	}
 
 	template <class T, class Container>
-	bool operator>=(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
-		return lhs._cont >= rhs._cont;
+	inline bool operator>=(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
+		return !(lhs < rhs);
 	}
 	
 	template <class T, class Container>
-	bool operator<=(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
-		return lhs._cont <= rhs._cont;
+	inline bool operator<=(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
+		return !(rhs < lhs);
 	}
 	
 } //ft namespace end

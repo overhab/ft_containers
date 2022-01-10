@@ -28,7 +28,7 @@ namespace ft {
 		struct iterator_traits {
 			typedef typename It::iterator_category	iterator_category;
 			typedef typename It::value_type 		value_type;
-			typedef typename It::difference_type		difference_type;
+			typedef typename It::difference_type	difference_type;
 			typedef typename It::reference 			reference;
 			typedef typename It::pointer 			pointer;
 		};
@@ -38,7 +38,7 @@ namespace ft {
 			typedef ft::random_access_iterator_tag 	iterator_category;
 			typedef T 								value_type;
 			typedef std::ptrdiff_t 					difference_type;
-			typedef T 								*pointer;
+			typedef T* 								pointer;
 			typedef T& 								reference;
 		};
 
@@ -47,8 +47,8 @@ namespace ft {
 			typedef ft::random_access_iterator_tag 	iterator_category;
 			typedef T 								value_type;
 			typedef std::ptrdiff_t 					difference_type;
-			typedef T 								*pointer;
-			typedef T& 								reference;
+			typedef const T* 						pointer;
+			typedef const T& 						reference;
 		};
 
-} //namespace ft end
+} //namespace ft end.
