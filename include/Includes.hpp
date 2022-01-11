@@ -3,6 +3,7 @@
 #include <sstream>
 #include "type_traits.hpp"
 #include "utils.hpp"
+#include "pair.hpp"
 #include "iterator.hpp"
 #include "normal_iterator.hpp"
 #include "vector.hpp"
