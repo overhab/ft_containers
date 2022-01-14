@@ -27,6 +27,19 @@ namespace ft {
 				return *this; 
 			}
 
+			virtual ~pair() {}
+
+
+			/**
+			 * DELETE AT THE END
+			 */
+			template<class F, class S>
+				static void printPair(const pair<F, S>& pr) { std::cout << pr.first << " " << pr.second
+					<< std::endl; }
+			/** 
+			 * DELETE AT THE END
+			 */
+
 		};
 	
 		template <class T1, class T2>
