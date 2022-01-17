@@ -16,6 +16,7 @@ namespace ft {
 			typedef RBTree<key_type, mapped_type, key_compare>	tree_type;
 
 			tree_type	_tree;
+			
 
 		public:
 			typedef Alloc									allocator_type;
@@ -26,7 +27,10 @@ namespace ft {
 			typedef typename tree_type::size_type			size_type;
 			typedef typename tree_type::difference_type		difference_type;
 
-			
+
+			allocator_type	get_allocator() const {
+				return _tree.get_allocator();
+			}
 		
 
 
