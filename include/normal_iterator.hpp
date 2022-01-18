@@ -14,7 +14,7 @@ namespace ft {
 				typedef typename _iterator_traits::value_type 			value_type;
 				typedef typename _iterator_traits::difference_type		difference_type;
 				typedef _Iterator& 			reference;
-				typedef _Iterator* 				pointer;
+				typedef _Iterator* 			pointer;
 
 			private:
 				pointer _current;

@@ -4,6 +4,12 @@
 
 namespace ft{ 
 
+	/**
+	 * https://en.cppreference.com/w/cpp/types/remove_cv
+	 */
+	template<class T> struct remove_const { typedef T type; };
+	template<class T> struct remove_const <const T> { typedef T type; };
+	
 	template<class T>
 		std::string my_to_string(T arg) {
 			std::stringstream ss;

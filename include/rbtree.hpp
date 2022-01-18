@@ -1,45 +1,13 @@
 #pragma once
 
 #include "Includes.hpp"
-
+#include "tree_iterator.hpp"
 
 namespace ft {
 
-	template<class T>
-		struct s_Node {
-			typedef T	value_type;
-			typedef T*	pointer;
-			typedef T&	reference;
-
-			value_type	value;
-			bool 		color; // true - red, false - black
-			s_Node<T>*	left;
-			s_Node<T>*	right;
-			s_Node<T>*	parent;
-
-			s_Node() {
-				color = false;
-				left = 0;
-				right = 0;
-				parent = 0;
-			}
-
-			s_Node(const T& val) : value(val) {
-				color = false;
-				left = 0;
-				right = 0;
-				parent = 0;
-
-				//T::printPair(value); //checker
-			}
-
-			~s_Node() {}
-
-		};
-
 	template<class key_type, class T, class Compare = std::less<key_type>, class A = std::allocator<ft::s_Node<T> > >
 		class RBTree {
-		private:
+		public:
 			typedef T										value_type;
 			typedef ft::s_Node<T>							Node;
 			typedef Compare									key_compare;
@@ -50,6 +18,13 @@ namespace ft {
 			typedef typename A::const_reference				const_reference;
 			typedef std::size_t								size_type;
 			typedef ptrdiff_t								difference_type;
+			typedef ft::tree_iterator<value_type>			iterator;
+			typedef ft::tree_iterator<const value_type>		const_iterator;
+			typedef ft::reverse_iterator<iterator>			reverse_iterator;
+			typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
+
+		private:
+			size_type			__size;
 
 			pointer				root;
 			pointer				nil_Node;
@@ -57,11 +32,12 @@ namespace ft {
 			key_compare			__comp;
 
 
+
 			pointer		create_node(const T& val, bool empty) {
 				pointer newNode;
 
 				newNode = this->_alloc.allocate(1);
-
+			
 				this->_alloc.construct(newNode, Node(val));
 				if (empty == false)
 					newNode->color = true;
@@ -112,7 +88,7 @@ namespace ft {
 
 			void	insert_fixup(pointer z) {
 				pointer y;
-
+				
 				while (z->parent->color == true){
 					if (z->parent == z->parent->parent->left) {
 						y = z->parent->parent->right;
@@ -121,13 +97,15 @@ namespace ft {
 							y->color = false;
 							z->parent->parent->color = true;
 							z = z->parent->parent;
-						} else if (z == z->parent->right) {
-							z = z->parent;
-							left_rotation(z);
+						} else {
+							if (z == z->parent->right) {
+								z = z->parent;
+								left_rotation(z);
+							}
+							z->parent->color = false;
+							z->parent->parent->color = true;
+							right_rotation(z->parent->parent);
 						}
-						z->parent->color = false;
-						z->parent->parent->color = true;
-						right_rotation(z->parent->parent);
 					} else { // same as previous but change 'right' to 'left' and vice versa
 						y = z->parent->parent->left;
 						if (y->color == true) {
@@ -135,13 +113,15 @@ namespace ft {
 							y->color = false;
 							z->parent->parent->color = true;
 							z = z->parent->parent;
-						} else if (z == z->parent->left) {
-							z = z->parent;
-							right_rotation(z);
+						} else {
+							if (z == z->parent->left) {
+								z = z->parent;
+								right_rotation(z);
+							}
+							z->parent->color = false;
+							z->parent->parent->color = true;
+							left_rotation(z->parent->parent);
 						}
-						z->parent->color = false;
-						z->parent->parent->color = true;
-						left_rotation(z->parent->parent);
 					}
 				}
 				root->color = false;
@@ -151,8 +131,9 @@ namespace ft {
 			/**
 			 * CONSTRUCTORS
 			 */
-			RBTree() {
+			RBTree() : __size(0) {
 				nil_Node = this->_alloc.allocate(1);
+				this->_alloc.construct(nil_Node, Node());
 				root = nil_Node;
 				root->left = nil_Node;
 				root->right = nil_Node;
@@ -165,31 +146,33 @@ namespace ft {
 				this->_alloc.deallocate(root, 1);
 			}
 
-			bool 	empty() { return root == nil_Node; }
+			key_compare		key_comp() const { return __comp;}
+
+			bool 	empty() const { return this->size() == 0; } // change to this->size() == 0;
+
+			size_type	size() const { return this->__size;}
+			size_type	max_size() const { return this->_alloc.max_size();}
 
 			allocator_type	get_allocator() const {
 				return this->_alloc;
 			}
 
-			// ft::pair<iterator, bool>
-			void	insert(const T& val) {
+			ft::pair<iterator, bool>	insert(const T& val) {
 				pointer		newNode;
+				ft::pair<iterator, bool> ins;
 
 				newNode = create_node(val, empty());
 
 				if (empty()) {
 					root = newNode;
+					ins = ft::pair<iterator, bool>(iterator(root, nil_Node), true);
 				} else {
 					pointer y = nil_Node;
 					pointer x = root;
 					while (x != nil_Node) {
 						y = x;
 						if (val.first == x->value.first) { //compare keys
-							x->value.second = val.second;
-
-							std::cout << "same key" << std::endl;
-
-							return ; //ft::pair<iterator, false>
+							return ft::pair<iterator, bool>(iterator(x, nil_Node), false);
 						}
 						else if (__comp(newNode->value.first, x->value.first))
 							x = x->left;
@@ -203,17 +186,128 @@ namespace ft {
 						y->left = newNode;
 					else
 						y->right = newNode;
-
-					newNode->left = nil_Node; // no need, leave for now
-					newNode->right = nil_Node;
-					newNode->color = true;
-
+					ins = ft::pair<iterator, bool>(iterator(root, nil_Node), true);
 					insert_fixup(newNode);
-					//deleteElement(newNode); // placeholder
 				}
+				nil_Node->left = root; // for end()
+				nil_Node->right = root; // for end()
+				__size++;
+				return ins;
 
 			}
 
+			iterator lower_bound (const key_type& k) {
+				for (iterator it = this->begin(); it != this->end(); ++it) {
+					if (!__comp(it->first, k))
+						return it;
+				}
+				return this->end();
+			}
+
+			const_iterator lower_bound (const key_type& k) const {
+				for (const_iterator it = this->begin(); it != this->end(); ++it) {
+					if (!__comp(it->first, k))
+						return it;
+				}
+				return this->end();
+			}
+
+			iterator upper_bound (const key_type& k) {
+				for (iterator it = this->begin(); it != this->end(); ++it) {
+					if (__comp(k, it->first))
+						return it;
+				}
+				return this->end();
+			}
+
+			const_iterator upper_bound (const key_type& k) const {
+				for (const_iterator it = this->begin(); it != this->end(); ++it) {
+					if (__comp(k, it->first))
+						return it;
+				}
+				return this->end();
+			}
+
+			size_type	count(const key_type& k) const {
+				pointer tmp = root;
+
+				while (tmp != nil_Node) {
+					if (__comp(tmp->value.first, k))
+						tmp = tmp->right;
+					else if (__comp(k, tmp->value.first))
+						tmp = tmp->left;
+					else
+						return 1;
+				}
+				return 0;
+			}
+
+			iterator	find(const key_type& k) {
+				pointer tmp = root;
+
+				while (tmp != nil_Node) {
+					if (__comp(tmp->value.first, k))
+						tmp = tmp->right;
+					else if (__comp(k, tmp->value.first))
+						tmp = tmp->left;
+					else
+						return iterator(tmp, nil_Node);
+				}
+				return this->end();
+			}
+
+			const_iterator	find(const key_type& k) const {
+				pointer tmp = root;
+				
+				while (tmp != nil_Node) {
+					if (__comp(tmp->value.first, k))
+						tmp = tmp->right;
+					else if (__comp(k, tmp->value.first))
+						tmp = tmp->left;
+					else
+						return const_iterator(tmp, nil_Node);
+				}
+				return this->end();
+			}
+
+			iterator begin() {
+				pointer tmp = root;
+				while (tmp->left != nil_Node)
+					tmp = tmp->left;
+				return iterator(tmp, nil_Node);
+			}
+
+			iterator end() {
+				return iterator(nil_Node, nil_Node);
+			}
+
+			const_iterator begin() const {
+				pointer tmp = root;
+				while (tmp->left != nil_Node)
+					tmp = tmp->left;
+				return const_iterator(tmp, nil_Node);
+			}
+
+			const_iterator end() const {
+				return const_iterator(nil_Node, nil_Node);
+			}
+
+			reverse_iterator rbegin() {
+				return reverse_iterator(end());
+			}
+
+			reverse_iterator rend() {
+				return reverse_iterator(begin());
+			}
+
+			const_reverse_iterator rbegin() const {
+				return const_reverse_iterator(end());
+			}
+
+			const_reverse_iterator rend() const {
+				return const_reverse_iterator(begin());
+			}
+			
 			void	printTree(pointer node = NULL, bool __isroot = true, bool __isLeft = false) {
 				if (__isroot)
 					node = root;
@@ -227,7 +321,6 @@ namespace ft {
 					printTree(node->left, false, true);
 					printTree(node->right, false, false);
 				} else if (__isLeft) {
-					//std::cout << "check" << std::endl;
 					std::cout << "left: color = " << node->color << "\n";
 					T::printPair(node->value);
 					printTree(node->left, false, true);
@@ -249,8 +342,14 @@ namespace ft {
 				this->_alloc.deallocate(node, 1);
 			}
 
+			void		iterator_test() const {
+				iterator it(root, nil_Node);
+				
+				value_type::printPair(*it);
+				it->second = 100100;
+				std::cout << it->second << std::endl;
 
-			
+			}
 
 		}; //RBTree class
 
