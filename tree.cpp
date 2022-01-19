@@ -3,37 +3,52 @@
 
 int main() {
 
+	ft::map<int, int>			mymap;
+	//ft::RBTree<int, ft::pair<int, int> >		tree;
 
-	ft::RBTree<int, ft::pair<int, int> >		tree;
+	mymap.insert(ft::pair<int, int>(10, 434));
+	mymap.insert(ft::pair<int, int>(3, 21));
+	mymap.insert(ft::pair<int, int>(35, 61));
+	mymap.insert(ft::pair<int, int>(2, 84));
+	mymap.insert(ft::pair<int, int>(12, 81));
+	mymap.insert(ft::pair<int, int>(7, 55));
 
-	tree.insert(ft::pair<int, int>(10, 434));
-	tree.insert(ft::pair<int, int>(3, 21));
-	tree.insert(ft::pair<int, int>(35, 61));
-	tree.insert(ft::pair<int, int>(1, 84));
-	tree.insert(ft::pair<int, int>(12, 81));
-	tree.insert(ft::pair<int, int>(7, 55));
+	ft::map<int,int>::iterator ttt = mymap.lower_bound(12);
 
-	tree.printTree();
+	mymap.insert(mymap.begin(), ft::pair<int, int>(1, 101));
+
+
 
 	std::cout << "-----------ITERATOR-------------" << std::endl;
-	ft::RBTree<int, ft::pair<int, int> >::const_reverse_iterator	itt = tree.rbegin();
+	
 	//itt->second = 2222222;
-	for (; itt != tree.rend(); ++itt)
+	for (ft::map<int, int>::iterator itt = mymap.begin(); itt != mymap.end(); ++itt)
 		std::cout << itt->first << ' ' << itt->second << std::endl;
 
-	std::cout << "find(35): " << tree.find(35)->second << "\ncount(3): " << tree.count(3) << std::endl;
+	mymap.printTree();
+
+	std::cout << "-----------ERASE-------------" << std::endl;
+
+	mymap.erase(ttt);
+
+	for (ft::map<int, int>::iterator itt = mymap.begin(); itt != mymap.end(); ++itt)
+		std::cout << itt->first << ' ' << itt->second << std::endl;
+
+	mymap.printTree();
+
+	/* std::cout << "find(35): " << mymap.find(35)->second << "\ncount(3): " << mymap.count(3) << std::endl;
 	
-	ft::RBTree<int, ft::pair<int, int> >::iterator	kek = tree.end();
+	ft::map<int, int>::iterator	kek = mymap.end();
 	--kek;
 	std::cout << "--end(): " << kek->first << ' ' << kek->second << std::endl;
 
-	ft::RBTree<int, ft::pair<int, int> >::const_iterator	low_b = tree.lower_bound(12);
+	ft::map<int, int>::const_iterator	low_b = mymap.lower_bound(12);
 
 	std::cout << "lower bound(12): " << low_b->second << std::endl;
 
-	ft::RBTree<int, ft::pair<int, int> >::const_iterator	up_b = tree.upper_bound(12);
+	ft::map<int, int>::const_iterator	up_b = mymap.upper_bound(12);
 
-	std::cout << "upper bound(12): " << up_b->second << std::endl;
+	std::cout << "upper bound(12): " << up_b->second << std::endl; */
 
 	//tree.iterator_test();
 	
