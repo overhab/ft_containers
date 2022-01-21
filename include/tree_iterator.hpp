@@ -221,12 +221,12 @@ namespace ft {
 		};
 
 		template<class _Iter1>
-		inline bool operator==(const tree_iterator<_Iter1> &lhs, const const_tree_iterator<_Iter1> &rhs) {
+		bool operator==(const tree_iterator<_Iter1> &lhs, const const_tree_iterator<_Iter1> &rhs) {
 			return lhs.base() == rhs.base();
 		}
 
 		template<class _Iter1>
-		inline bool operator!=(const tree_iterator<_Iter1> &lhs, const const_tree_iterator<_Iter1> &rhs) {
+		bool operator!=(const tree_iterator<_Iter1> &lhs, const const_tree_iterator<_Iter1> &rhs) {
 			return lhs.base() != rhs.base();
 		}
 

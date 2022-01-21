@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Includes.hpp"
-#include "../include/vector.hpp"
 
 namespace ft {
 	template <class T, class Container = ft::vector<T> >
@@ -37,32 +36,32 @@ namespace ft {
 	**Operator overloads
 	*/
 	template <class T, class Container>
-	inline bool operator==(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
+	bool operator==(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
 		return lhs._cont == rhs._cont;
 	}
 
 	template <class T, class Container>
-	inline bool operator!=(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
+	bool operator!=(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
 		return !(lhs == rhs);
 	}
 
 	template <class T, class Container>
-	inline bool operator>(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
+	bool operator>(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
 		return rhs < lhs;
 	}
 
 	template <class T, class Container>
-	inline bool operator<(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
+	bool operator<(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
 		return lhs._cont < rhs._cont;
 	}
 
 	template <class T, class Container>
-	inline bool operator>=(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
+	bool operator>=(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
 		return !(lhs < rhs);
 	}
 	
 	template <class T, class Container>
-	inline bool operator<=(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
+	bool operator<=(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
 		return !(rhs < lhs);
 	}
 	

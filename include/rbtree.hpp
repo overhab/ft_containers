@@ -49,8 +49,7 @@ namespace ft {
 			}
 
 			void	left_rotation(pointer x) {
-				
-
+			
 				pointer y = x->right;
 				x->right = y->left;
 
@@ -68,8 +67,6 @@ namespace ft {
 			}
 
 			void	right_rotation(pointer x) {
-
-
 				pointer y = x->left;
 				x->left = y->right;
 
@@ -206,13 +203,18 @@ namespace ft {
 				x->color = false;
 			}
 
+			void	deleteElement(const pointer& node) {
+				this->__val_alloc.destroy(&node->value);
+				this->_alloc.deallocate(node, 1);
+			}
+
 		public:
 			/**
 			 * CONSTRUCTORS
 			 */
 			RBTree() : __size(0) {
 				nil_Node = this->_alloc.allocate(1);
-				//this->_alloc.construct(nil_Node, Node());
+				this->_alloc.construct(nil_Node, Node());
 				root = nil_Node;
 				nil_Node->left = root;
 				nil_Node->right = root;
@@ -222,7 +224,7 @@ namespace ft {
 
 			RBTree(const Compare& comp) : __size(0), __comp(comp) {
 				nil_Node = this->_alloc.allocate(1);
-				//this->_alloc.construct(nil_Node, Node());
+				this->_alloc.construct(nil_Node, Node());
 				root = nil_Node;
 				nil_Node->left = root;
 				nil_Node->right = root;
@@ -231,6 +233,7 @@ namespace ft {
 			}
 
 			~RBTree() {
+				this->_alloc.destroy(nil_Node);
 				this->_alloc.deallocate(nil_Node, 1);
 			}
 
@@ -463,9 +466,9 @@ namespace ft {
 					y->left->parent = y;
 					y->color = z->color;
 				}
-				deleteElement(to_delete);
 				if (y_original_color == false)
 					deleteFix(x);
+				deleteElement(to_delete);
 				__size--;
 				if (__size == 0)
 					root = nil_Node;
@@ -506,27 +509,21 @@ namespace ft {
 				}
 			} */
 
-			void	deleteElement(const pointer& node) {
-				this->__val_alloc.destroy(&node->value);
-				this->_alloc.deallocate(node, 1);
-			}
-
 		}; //RBTree class
 
-	
 		template<class key_type, class T, class Compare>
-		inline bool operator<(const RBTree<key_type, T, Compare>& lhs,  const RBTree<key_type, T, Compare>& rhs){
+		bool operator<(const RBTree<key_type, T, Compare>& lhs,  const RBTree<key_type, T, Compare>& rhs){
 			return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 		}
 		
 		template<class key_type, class T, class Compare>
-		inline bool operator>(const RBTree<key_type, T, Compare>& lhs,  const RBTree<key_type, T, Compare>& rhs){
+		bool operator>(const RBTree<key_type, T, Compare>& lhs,  const RBTree<key_type, T, Compare>& rhs){
 			return (lhs < rhs);
 		}
 		
 		
 		template<class key_type, class T, class Compare>
-		inline bool operator==(const RBTree<key_type, T, Compare>& lhs, const RBTree<key_type, T, Compare>& rhs){
+		bool operator==(const RBTree<key_type, T, Compare>& lhs, const RBTree<key_type, T, Compare>& rhs){
 			return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 		}
 		
@@ -534,6 +531,5 @@ namespace ft {
 		void swap(const  RBTree<key_type, T, Compare>& lhs, const  RBTree<key_type, T, Compare>& rhs){
 			lhs.swap(rhs);
 		}
-
 
 } //namespace ft end

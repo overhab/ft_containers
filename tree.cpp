@@ -10,7 +10,6 @@
 
 int main() {
 
-
 	std::list<T3> lst;
 	unsigned int lst_size = 10;
 	for (unsigned int i = 0; i < lst_size; ++i)
@@ -153,6 +152,24 @@ int main() {
 	ft::map<int, int>::iterator it = const_map.begin();
 	
 	(void)it; */
+
+	ft::vector<int> 	vec;
+	ft::stack<int>		stack;
+
+	(void)stack;
+
+	vec.push_back(10);
+
+	std::cout << vec.at(0) << std::endl;
+
+	std::list<int>		kak;
+
+	kak.push_back(10);
+	kak.push_back(10);
+	kak.push_back(10);
+	kak.push_back(10);
+
+	ft::vector<int> 		vks(kak.begin(), kak.end());
 
 	return 0;
 }

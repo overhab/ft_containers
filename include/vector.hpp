@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Includes.hpp"
-#include "normal_iterator.hpp"
 #include <memory>
 
 namespace ft {
@@ -53,7 +52,7 @@ namespace ft {
 
 			explicit vector(const allocator_type& alloc = allocator_type()) : _alloc(alloc), _array(0), _size(0), _capacity(0)  {};
 
-			explicit vector (size_type n, const value_type& val = value_type(),
+			explicit vector(size_type n, const value_type& val = value_type(),
                  const allocator_type& alloc = allocator_type())
 				 	: _alloc(alloc), _size(n), _capacity(n) {
 					_array = _alloc.allocate(n);
@@ -84,10 +83,8 @@ namespace ft {
 				vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type(),
 					typename ft::enable_if<!is_integral<InputIterator>::value>::type* = 0)
 						: _alloc(alloc), _size(ft::distance(first, last)), _capacity(ft::distance(first, last)) {
-					if (first > last)
-						throw std::length_error("vector");
 					this->_array = this->_alloc.allocate(this->size());
-					for (size_type i = 0; first < last; i++, first++) {
+					for (size_type i = 0; first != last; i++, first++) {
 						_alloc.construct(this->_array + i, *first);
 					}
 				}
@@ -295,7 +292,9 @@ namespace ft {
 				this->_alloc.deallocate(this->_array, this->_capacity);
 			};
 
-			//iterators
+			/**
+			 * iterators
+			 */
 			iterator begin() {
 				return iterator(_array);
 			}
@@ -338,34 +337,34 @@ namespace ft {
 	** relational operators
 	*/
 	template <class T, class Alloc>
-		inline bool operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		bool operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
 			return (lhs.size() == rhs.size()
 				&& ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
   		}	
 
 	template <class T, class Alloc>
-		inline bool operator!=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		bool operator!=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
 			return !(lhs == rhs);
   		}
 
 	template <class T, class Alloc>
-		inline bool operator< (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		bool operator< (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
 			return ft::lexicographical_compare(lhs.begin(), lhs.end(),
 				rhs.begin(), rhs.end());
   		}
 
 	template <class T, class Alloc>
-		inline bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
 			return !(rhs < lhs);
   		}
 
 	template <class T, class Alloc>
-		inline bool operator> (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		bool operator> (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
 			return rhs < lhs;
   		}
 
 	template <class T, class Alloc>
-		inline bool operator>=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		bool operator>=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
 			return !(lhs < rhs);
 		}
 
