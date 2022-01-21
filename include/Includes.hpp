@@ -2,6 +2,8 @@
 
 #include <sstream>
 #include <memory>
+#include <math.h>
+#include <cstddef>
 #include "type_traits.hpp"
 #include "utils.hpp"
 #include "pair.hpp"

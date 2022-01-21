@@ -86,7 +86,7 @@ namespace ft {
 				return normal_iterator(_current - __dist);
 			}
 
-			virtual ~normal_iterator() {}
+			~normal_iterator() {}
 		};
 
 	template<class _Iter1, class _Iter2>
@@ -229,7 +229,7 @@ namespace ft {
 				return reverse_iterator(_current + __dist);
 			}
 
-			virtual ~reverse_iterator() {}
+			~reverse_iterator() {}
 		};
 
 	template<class _Iter1, class _Iter2>

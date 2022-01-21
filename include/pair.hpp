@@ -27,49 +27,38 @@ namespace ft {
 				return *this; 
 			}
 
-			virtual ~pair() {}
-
-
-			/**
-			 * DELETE AT THE END
-			 */
-			template<class F, class S>
-				static void printPair(const pair<F, S>& pr) { std::cout << pr.first << " " << pr.second
-					<< std::endl; }
-			/** 
-			 * DELETE AT THE END
-			 */
+			~pair() {}
 
 		};
 	
 		template <class T1, class T2>
-			bool operator==(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs) {
-				return ((lhs.first == rhs.first) && (lhs.second == rhs.second));
+			inline bool operator==(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs) {
+				return lhs.first == rhs.first && lhs.second == rhs.second;
 			}
 
 		template <class T1, class T2>
-			bool operator!=(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs) {
+			inline bool operator!=(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs) {
 				return !(lhs == rhs);
 			}
 
 		template <class T1, class T2>
-			bool operator<(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs) {
+			inline bool operator<(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs) {
 				return (lhs.first < rhs.first || (!(rhs.first < lhs.first) 
 					&& lhs.second < rhs.second));
 			}
 
 		template <class T1, class T2>
-			bool operator<=(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs) {
+			inline bool operator<=(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs) {
 				return !(rhs < lhs);
 			}
 
 		template <class T1, class T2>
-			bool operator>(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs) {
+			inline bool operator>(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs) {
 				return rhs < lhs;
 			}
 
 		template <class T1, class T2>
-			bool operator>=(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs) {
+			inline bool operator>=(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs) {
 				return !(lhs < rhs);
 			}
 

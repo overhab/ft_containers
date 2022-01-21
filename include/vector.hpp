@@ -30,7 +30,6 @@ namespace ft {
 			size_type		_size;
 			size_type		_capacity;
 
-			/* REALLOCATE NEW VECTOR WHEN NEEDED with newCapacity */
 			bool		reallocate(size_type newCapacity) {
 				/* check if newCapacity != 0 (even tho it's impossible to get here if its 0) */
 				size_type oldSize = this->size();
@@ -67,9 +66,6 @@ namespace ft {
 				: _alloc(x._alloc), _size(x.size()), _capacity(x.capacity()) {
 				this->_array = this->_alloc.allocate(this->capacity());
 				this->assign(x.begin(), x.end());
-/* 				for (size_type i = 0; i < this->size(); i++) {
-					this->_alloc.construct(&this->_array[i], x[i]);
-				} */
 			}
 
 			vector& operator=(const vector& x) {
@@ -158,9 +154,6 @@ namespace ft {
 
 					this->clear();
 					if (n > this->_capacity) {
-						//this->_alloc.deallocate(this->_array, this->_capacity);
-						//this->_alloc.allocate(n);
-						//this->_capacity = n;
 						this->reserve(n);
 					}
 					for (size_type i = 0; first != last; i++, first++) {
@@ -300,7 +293,6 @@ namespace ft {
 			~vector() {
 				this->clear();
 				this->_alloc.deallocate(this->_array, this->_capacity);
-				//this->_array = 0;
 			};
 
 			//iterators

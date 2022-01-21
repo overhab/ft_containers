@@ -10,6 +10,7 @@ namespace ft {
 		public:
 			typedef T										value_type;
 			typedef ft::s_Node<T>							Node;
+			typedef std::allocator<T>						value_alloc;
 			typedef Compare									key_compare;
 			typedef A										allocator_type;
 			typedef typename A::pointer 					pointer;
@@ -17,15 +18,15 @@ namespace ft {
 			typedef typename A::reference					reference;
 			typedef typename A::const_reference				const_reference;
 			typedef std::size_t								size_type;
-			typedef ptrdiff_t								difference_type;
+			typedef std::ptrdiff_t							difference_type;
 			typedef ft::tree_iterator<value_type>			iterator;
-			typedef ft::tree_iterator<const value_type>		const_iterator;
+			typedef ft::const_tree_iterator<value_type>		const_iterator;
 			typedef ft::reverse_iterator<iterator>			reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 
 		private:
 			size_type			__size;
-
+			value_alloc			__val_alloc;
 			pointer				root;
 			pointer				nil_Node;
 			allocator_type		_alloc;
@@ -36,7 +37,8 @@ namespace ft {
 
 				newNode = this->_alloc.allocate(1);
 			
-				this->_alloc.construct(newNode, Node(val));
+				this->__val_alloc.construct(&newNode->value, val);
+				newNode->color = false;
 				if (empty == false)
 					newNode->color = true;
 				newNode->parent = nil_Node;
@@ -210,25 +212,26 @@ namespace ft {
 			 */
 			RBTree() : __size(0) {
 				nil_Node = this->_alloc.allocate(1);
-				this->_alloc.construct(nil_Node, Node());
+				//this->_alloc.construct(nil_Node, Node());
 				root = nil_Node;
+				nil_Node->left = root;
+				nil_Node->right = root;
 				root->left = nil_Node;
 				root->right = nil_Node;
 			}
 
 			RBTree(const Compare& comp) : __size(0), __comp(comp) {
 				nil_Node = this->_alloc.allocate(1);
-				this->_alloc.construct(nil_Node, Node());
+				//this->_alloc.construct(nil_Node, Node());
 				root = nil_Node;
+				nil_Node->left = root;
+				nil_Node->right = root;
 				root->left = nil_Node;
 				root->right = nil_Node;
 			}
 
 			~RBTree() {
-				//add clear_tree();
 				this->_alloc.deallocate(nil_Node, 1);
-				this->_alloc.destroy(root);
-				this->_alloc.deallocate(root, 1);
 			}
 
 			key_compare		key_comp() const { return __comp;}
@@ -236,7 +239,9 @@ namespace ft {
 			bool 	empty() const { return this->size() == 0; }
 
 			size_type	size() const { return this->__size;}
-			size_type	max_size() const { return this->_alloc.max_size();}
+			size_type	max_size() const { 
+				return this->_alloc.max_size();
+			}
 
 			allocator_type	get_allocator() const {
 				return this->_alloc;
@@ -259,7 +264,7 @@ namespace ft {
 					pointer x = __pos;
 					while (x != nil_Node) {
 						y = x;
-						if (val == x->value) { //compare keys
+						if (val.first == x->value.first) { //compare keys
 							this->deleteElement(newNode);
 							return ft::pair<iterator, bool>(iterator(x, nil_Node), false);
 						}
@@ -279,14 +284,20 @@ namespace ft {
 					insert_fixup(newNode);
 				}
 				nil_Node->left = root; // for end()
-				nil_Node->right = root; // for end()
+				nil_Node->right = root;
+				nil_Node->parent = nil_Node;
+				root->parent = nil_Node;
 				__size++;
 				return ins;
 
 			}
 
 			iterator insert(iterator position, const T& val) {
-				iterator ret;
+
+				(void)position;
+				return (this->insert(val)).first;
+
+				/* iterator ret;
 
 				if (position == begin()) {
 					if (position != end() && __comp(val, (*position)))
@@ -301,7 +312,7 @@ namespace ft {
 				} 
 				else 
 					ret = (this->insert(val)).first;
-				return ret;
+				return ret; */
 			}
 
 		template <class InputIterator>
@@ -424,7 +435,9 @@ namespace ft {
 			}
 
 			void erase(iterator position) {
-				pointer z = position.base(), x, y;
+				if (__size == 0)
+					return ;
+				pointer z = position.base(), x, y, to_delete = z;
 				
 				y = z;
 				bool y_original_color = y->color;
@@ -450,15 +463,25 @@ namespace ft {
 					y->left->parent = y;
 					y->color = z->color;
 				}
-				deleteElement(y);
+				deleteElement(to_delete);
 				if (y_original_color == false)
 					deleteFix(x);
-			__size--;
-			nil_Node->left = root; // for end()
-			nil_Node->right = root;
+				__size--;
+				if (__size == 0)
+					root = nil_Node;
+				nil_Node->parent = nil_Node;
+				nil_Node->left = root; // for end()
+				nil_Node->right = root;
+				root->parent = nil_Node;
+			}
+
+			void	swap(RBTree& x) {
+				ft::my_swap(this->nil_Node, x.nil_Node);
+				ft::my_swap(this->root, x.root);
+				ft::my_swap(this->__size, x.__size);
 			}
 			
-			void	printTree(pointer node = NULL, bool __isroot = true, bool __isLeft = false) const {
+			/* void	printTree(pointer node = NULL, bool __isroot = true, bool __isLeft = false) const {
 				if (__isroot)
 					node = root;
 				if (node == nil_Node) {
@@ -481,28 +504,36 @@ namespace ft {
 					printTree(node->left, false, true);
 					printTree(node->right, false, false);
 				}
-			}
+			} */
 
 			void	deleteElement(const pointer& node) {
-				this->_alloc.destroy(node);
+				this->__val_alloc.destroy(&node->value);
 				this->_alloc.deallocate(node, 1);
-			}
-
-			void		iterator_test() const {
-				iterator it(root, nil_Node);
-				
-				value_type::printPair(*it);
-				it->second = 100100;
-				std::cout << it->second << std::endl;
-
 			}
 
 		}; //RBTree class
 
-
-
-
-
+	
+		template<class key_type, class T, class Compare>
+		inline bool operator<(const RBTree<key_type, T, Compare>& lhs,  const RBTree<key_type, T, Compare>& rhs){
+			return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+		}
+		
+		template<class key_type, class T, class Compare>
+		inline bool operator>(const RBTree<key_type, T, Compare>& lhs,  const RBTree<key_type, T, Compare>& rhs){
+			return (lhs < rhs);
+		}
+		
+		
+		template<class key_type, class T, class Compare>
+		inline bool operator==(const RBTree<key_type, T, Compare>& lhs, const RBTree<key_type, T, Compare>& rhs){
+			return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+		}
+		
+		template<class key_type, class T, class Compare>
+		void swap(const  RBTree<key_type, T, Compare>& lhs, const  RBTree<key_type, T, Compare>& rhs){
+			lhs.swap(rhs);
+		}
 
 
 } //namespace ft end

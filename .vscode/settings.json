@@ -45,7 +45,9 @@
 		"ctime": "cpp",
 		"map": "cpp",
 		"set": "cpp",
-		"iomanip": "cpp"
+		"iomanip": "cpp",
+		"stack": "cpp",
+		"csignal": "cpp"
 	},
 	"C_Cpp.errorSquiggles": "Disabled"
 }
