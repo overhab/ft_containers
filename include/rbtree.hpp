@@ -299,23 +299,6 @@ namespace ft {
 
 				(void)position;
 				return (this->insert(val)).first;
-
-				/* iterator ret;
-
-				if (position == begin()) {
-					if (position != end() && __comp(val, (*position)))
-						ret = (this->insert(val, position.base())).first;
-					else 
-						ret = (this->insert(val)).first;
-				} else if (position == end()) {
-					if (position != begin() && __comp((*position), val))
-						ret = (this->insert(val, (position.base() - 1))).first;
-					else 
-						ret = (this->insert(val)).first;
-				} 
-				else 
-					ret = (this->insert(val)).first;
-				return ret; */
 			}
 
 		template <class InputIterator>
@@ -483,31 +466,6 @@ namespace ft {
 				ft::my_swap(this->root, x.root);
 				ft::my_swap(this->__size, x.__size);
 			}
-			
-			/* void	printTree(pointer node = NULL, bool __isroot = true, bool __isLeft = false) const {
-				if (__isroot)
-					node = root;
-				if (node == nil_Node) {
-					std::cout << "nil node " << node->color << std::endl;
-					return ;
-				}
-				if (__isroot) {
-					std::cout << "root: color = " << node->color << "\n";
-					T::printPair(node->value);
-					printTree(node->left, false, true);
-					printTree(node->right, false, false);
-				} else if (__isLeft) {
-					std::cout << "left: color = " << node->color << "\n";
-					T::printPair(node->value);
-					printTree(node->left, false, true);
-					printTree(node->right, false, false);
-				} else {
-					std::cout << "right: color = " << node->color << "\n";
-					T::printPair(node->value);
-					printTree(node->left, false, true);
-					printTree(node->right, false, false);
-				}
-			} */
 
 		}; //RBTree class
 

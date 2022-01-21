@@ -226,10 +226,6 @@ namespace ft {
 				this->_tree.swap(x._tree);
 			}
 
-			/* void		printTree() const {
-				_tree.printTree();
-			} */
-
 			template<class _K1, class _T1, class _C1, class _A1>
 			friend bool operator==(const map<_K1, _T1, _C1, _A1>&, const map<_K1, _T1, _C1, _A1>&);
 

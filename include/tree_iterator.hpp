@@ -65,7 +65,6 @@ namespace ft {
 							_current = y;
 							y = y->parent;
 						}
-						//if (_current->right != y)
 						_current = y;
 					}
 					return *this;
@@ -82,7 +81,6 @@ namespace ft {
 							_current = y;
 							y = y->parent;
 						}
-						//if (_current->left != y)
 						_current = y;
 					}
 					return *this;
@@ -175,7 +173,6 @@ namespace ft {
 							_current = y;
 							y = y->parent;
 						}
-						//if (_current->right != y)
 						_current = y;
 					}
 					return *this;
@@ -192,7 +189,6 @@ namespace ft {
 							_current = y;
 							y = y->parent;
 						}
-						//if (_current->left != y)
 						_current = y;
 					}
 					return *this;

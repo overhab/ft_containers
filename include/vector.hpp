@@ -30,14 +30,18 @@ namespace ft {
 			size_type		_capacity;
 
 			bool		reallocate(size_type newCapacity) {
-				/* check if newCapacity != 0 (even tho it's impossible to get here if its 0) */
 				size_type oldSize = this->size();
 
 				if (newCapacity == 0)
 					return false;
 				pointer tmp = this->_alloc.allocate(newCapacity);
-				for (size_type i = 0; i < this->_size; i++) {
-					_alloc.construct(&tmp[i], this->_array[i]);
+				try {
+					for (size_type i = 0; i < this->_size; i++) {
+						_alloc.construct(&tmp[i], this->_array[i]);
+					}
+				} catch (std::exception &e) {
+					this->_alloc.deallocate(tmp, newCapacity);
+					throw;
 				}
 				if (this->capacity() != 0)
 					this->~vector(); //delete previous instance of vector to replace with new
@@ -120,7 +124,6 @@ namespace ft {
 					throw std::length_error("vector");
 				if (n > this->_capacity)
 					this->reallocate(n);
-				/* check if the vector[i] (where i is index after new size) is returning 0 */
 			};
 
 			void	resize(size_type n, value_type val = value_type()) {
