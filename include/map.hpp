@@ -145,7 +145,7 @@ namespace ft {
 
 		template <class InputIterator>
 			void 	insert(InputIterator first, InputIterator last) {
-				for (; first != last; ++first) {
+				for (; first != last; first++) {
 					this->insert(*first);
 				}
 			}
@@ -153,8 +153,7 @@ namespace ft {
 			void	erase(iterator position) {
 				if (this->size() == 0)
 					return ;
-				if (position == find(position->first))
-					_tree.erase(position);
+				this->erase(position->first);
 			}
 
 			size_type	erase(const key_type& k) {
@@ -162,7 +161,7 @@ namespace ft {
 					return 0;
 				iterator __pos = find(k);
 				if (__pos != end()) {
-					erase(__pos);
+					_tree.erase(__pos);
 					return 1;
 				}
 				return 0;
@@ -172,7 +171,7 @@ namespace ft {
 				if (this->size() == 0)
 					return ;
 				while (first != last) {
-					this->erase(first++);
+					this->erase((first++)->first);
 					if (this->size() == 0)
 						break ;
 				}

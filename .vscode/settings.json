@@ -47,7 +47,10 @@
 		"set": "cpp",
 		"iomanip": "cpp",
 		"stack": "cpp",
-		"csignal": "cpp"
+		"csignal": "cpp",
+		"*.ipp": "cpp",
+		"chrono": "cpp",
+		"ratio": "cpp"
 	},
 	"C_Cpp.errorSquiggles": "Disabled"
 }

@@ -37,6 +37,7 @@ namespace ft {
 
 				newNode = this->_alloc.allocate(1);
 			
+				//this->_alloc.construct(newNode, Node(val));
 				this->__val_alloc.construct(&newNode->value, val);
 				newNode->color = false;
 				if (empty == false)
@@ -149,7 +150,7 @@ namespace ft {
 			void	deleteFix(pointer x) {
 				pointer w;
 
-				while (x != nil_Node && x->color == false) {
+				while (x != root && x->color == false) {
 					if (x == x->parent->left) {
 						w = x->parent->right;
 						if (w->color == true) {
@@ -205,6 +206,7 @@ namespace ft {
 
 			void	deleteElement(const pointer& node) {
 				this->__val_alloc.destroy(&node->value);
+				//this->_alloc.destroy(node);
 				this->_alloc.deallocate(node, 1);
 			}
 
@@ -214,7 +216,7 @@ namespace ft {
 			 */
 			RBTree() : __size(0) {
 				nil_Node = this->_alloc.allocate(1);
-				this->_alloc.construct(nil_Node, Node());
+				//this->_alloc.construct(nil_Node, Node());
 				root = nil_Node;
 				nil_Node->left = root;
 				nil_Node->right = root;
@@ -267,11 +269,11 @@ namespace ft {
 					pointer x = __pos;
 					while (x != nil_Node) {
 						y = x;
-						if (val.first == x->value.first) { //compare keys
+						/* if (val.first == x->value.first) { //compare keys
 							this->deleteElement(newNode);
 							return ft::pair<iterator, bool>(iterator(x, nil_Node), false);
-						}
-						else if (__comp(newNode->value, x->value))
+						} */
+						if (__comp(newNode->value, x->value))
 							x = x->left;
 						else 
 							x = x->right;
@@ -424,7 +426,7 @@ namespace ft {
 				if (__size == 0)
 					return ;
 				pointer z = position.base(), x, y, to_delete = z;
-				
+
 				y = z;
 				bool y_original_color = y->color;
 				if (z->left == nil_Node) {
