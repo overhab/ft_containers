@@ -2,31 +2,23 @@
 
 #include "Includes.hpp"
 
+
 namespace ft {
+
+	enum tree_color { _BLACK = false, _RED = true };
 
 	template<class T>
 		struct s_Node {
-			typedef T	value_type;
+			typedef T				value_type;
+			typedef value_type*		pointer;
+			typedef value_type&		reference;
+			typedef s_Node*			ptr;
 
 			value_type	value;
-			bool 		color; // true - red, false - black
-			s_Node<T>*	left;
-			s_Node<T>*	right;
-			s_Node<T>*	parent;
-
-			s_Node() {
-				color = false;
-				right = 0;
-				left = 0;
-				parent = 0;
-			}
-
-			s_Node(const value_type& val) : value(val) {
-				color = false;
-				right = 0;
-				left = 0;
-				parent = 0;
-			}
+			tree_color 	color;
+			ptr			left;
+			ptr			right;
+			ptr			parent;
 
 		};
 

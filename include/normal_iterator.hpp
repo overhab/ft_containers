@@ -279,7 +279,7 @@ namespace ft {
 		distance(_Iter1 first, _Iter2 last) {
 			typename iterator_traits<_Iter1>::difference_type dist = 0;
 			while (first != last) {
-				first++;
+				++first;
 				dist++;
 			}
 			return dist;

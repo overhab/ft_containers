@@ -36,12 +36,10 @@ namespace ft {
 				pointer newNode;
 
 				newNode = this->_alloc.allocate(1);
-			
-				//this->_alloc.construct(newNode, Node(val));
 				this->__val_alloc.construct(&newNode->value, val);
-				newNode->color = false;
+				newNode->color = _BLACK;
 				if (empty == false)
-					newNode->color = true;
+					newNode->color = _RED;
 				newNode->parent = nil_Node;
 				newNode->left = nil_Node;
 				newNode->right = nil_Node;
@@ -87,42 +85,42 @@ namespace ft {
 			void	insert_fixup(pointer z) {
 				pointer y;
 				
-				while (z->parent->color == true){
+				while (z->parent->color == _RED){
 					if (z->parent == z->parent->parent->left) {
 						y = z->parent->parent->right;
-						if (y->color == true) {
-							z->parent->color = false;
-							y->color = false;
-							z->parent->parent->color = true;
+						if (y->color == _RED) {
+							z->parent->color = _BLACK;
+							y->color = _BLACK;
+							z->parent->parent->color = _RED;
 							z = z->parent->parent;
 						} else {
 							if (z == z->parent->right) {
 								z = z->parent;
 								left_rotation(z);
 							}
-							z->parent->color = false;
-							z->parent->parent->color = true;
+							z->parent->color = _BLACK;
+							z->parent->parent->color = _RED;
 							right_rotation(z->parent->parent);
 						}
-					} else { // same as previous but change 'right' to 'left' and vice versa
+					} else {
 						y = z->parent->parent->left;
-						if (y->color == true) {
-							z->parent->color = false;
-							y->color = false;
-							z->parent->parent->color = true;
+						if (y->color == _RED) {
+							z->parent->color = _BLACK;
+							y->color = _BLACK;
+							z->parent->parent->color = _RED;
 							z = z->parent->parent;
 						} else {
 							if (z == z->parent->left) {
 								z = z->parent;
 								right_rotation(z);
 							}
-							z->parent->color = false;
-							z->parent->parent->color = true;
+							z->parent->color = _BLACK;
+							z->parent->parent->color = _RED;
 							left_rotation(z->parent->parent);
 						}
 					}
 				}
-				root->color = false;
+				root->color = _BLACK;
 			}
 
 			void	transplant(pointer x, pointer y) {
@@ -150,63 +148,101 @@ namespace ft {
 			void	deleteFix(pointer x) {
 				pointer w;
 
-				while (x != root && x->color == false) {
+				while (x != root && x->color == _BLACK) {
 					if (x == x->parent->left) {
 						w = x->parent->right;
-						if (w->color == true) {
-							w->color = false;
-							x->parent->color = true;
+						if (w->color == _RED) {
+							w->color = _BLACK;
+							x->parent->color = _RED;
 							left_rotation(x->parent);
 							w = x->parent->right;
 						}
-						if (w->left->color == false && w->right->color == false) {
-							w->color = true;
+						if (w->left->color == _BLACK && w->right->color == _BLACK) {
+							w->color = _RED;
 							x = x->parent;
 						} else {
-							if (w->right->color == false) {
-								w->left->color = false;
-								w->color = true;
+							if (w->right->color == _BLACK) {
+								w->left->color = _BLACK;
+								w->color = _RED;
 								right_rotation(w);
 								w = x->parent->right;
 							}
 							w->color = x->parent->color;
-							x->parent->color = false;
-							w->right->color = false;
+							x->parent->color = _BLACK;
+							w->right->color = _BLACK;
 							left_rotation(x->parent);
 							x = root;
 						}
 					} else {
 						w = x->parent->left;
-						if (w->color == true) {
-							w->color = false;
-							x->parent->color = true;
-							left_rotation(x->parent);
+						if (w->color == _RED) {
+							w->color = _BLACK;
+							x->parent->color = _RED;
+							right_rotation(x->parent);
 							w = x->parent->left;
 						}
-						if (w->right->color == false && w->left->color == false) {
-							w->color = true;
+						if (w->right->color == _BLACK && w->left->color == _BLACK) {
+							w->color = _RED;
 							x = x->parent;
 						} else {
-							if (w->left->color == false) {
-								w->right->color = false;
-								w->color = true;
-								right_rotation(w);
+							if (w->left->color == _BLACK) {
+								w->right->color = _BLACK;
+								w->color = _RED;
+								left_rotation(w);
 								w = x->parent->left;
 							}
 							w->color = x->parent->color;
-							x->parent->color = false;
-							w->left->color = false;
-							left_rotation(x->parent);
+							x->parent->color = _BLACK;
+							w->left->color = _BLACK;
+							right_rotation(x->parent);
 							x = root;
 						}
 					}
 				}
-				x->color = false;
+				x->color = _BLACK;
+			}
+
+			void erase_node(const_iterator position) {
+				pointer z = position.base(), x, y, to_delete = z;
+
+				y = z;
+				tree_color y_original_color = y->color;
+				if (z->left == nil_Node) {
+					x = z->right;
+					transplant(z, z->right);
+				} else if (z->right == nil_Node) {
+					x = z->left;
+					transplant(z, z->left);
+				} else {
+					y = tree_minimum(z->right);
+					y_original_color = y->color;
+					x = y->right;
+					if (y->parent == z)
+						x->parent = y;
+					else {
+						transplant(y, y->right);
+						y->right = z->right;
+						y->right->parent = y;
+					}
+					transplant(z, y);
+					y->left = z->left;
+					y->left->parent = y;
+					y->color = z->color;
+				}
+				if (y_original_color == _BLACK)
+					deleteFix(x);
+				deleteElement(to_delete);
+				__size--;
+				if (__size == 0)
+					root = nil_Node;
+				nil_Node->parent = nil_Node;
+				nil_Node->left = root; // for end()
+				nil_Node->right = root;
+				root->parent = nil_Node;
 			}
 
 			void	deleteElement(const pointer& node) {
 				this->__val_alloc.destroy(&node->value);
-				//this->_alloc.destroy(node);
 				this->_alloc.deallocate(node, 1);
 			}
 
@@ -216,7 +252,6 @@ namespace ft {
 			 */
 			RBTree() : __size(0) {
 				nil_Node = this->_alloc.allocate(1);
-				//this->_alloc.construct(nil_Node, Node());
 				root = nil_Node;
 				nil_Node->left = root;
 				nil_Node->right = root;
@@ -225,6 +260,16 @@ namespace ft {
 			}
 
 			RBTree(const Compare& comp) : __size(0), __comp(comp) {
+				nil_Node = this->_alloc.allocate(1);
+				this->_alloc.construct(nil_Node, Node());
+				root = nil_Node;
+				nil_Node->left = root;
+				nil_Node->right = root;
+				root->left = nil_Node;
+				root->right = nil_Node;
+			}
+
+			RBTree(const Compare& comp, const value_alloc& alloc) : __size(0), __val_alloc(alloc), __comp(comp) {
 				nil_Node = this->_alloc.allocate(1);
 				this->_alloc.construct(nil_Node, Node());
 				root = nil_Node;
@@ -263,16 +308,12 @@ namespace ft {
 
 				if (empty()) {
 					root = newNode;
-					ins = ft::pair<iterator, bool>(iterator(root, nil_Node), true);
+					ins = ft::pair<iterator, bool>(iterator(root, nil_Node), _RED);
 				} else {
 					pointer y = nil_Node;
 					pointer x = __pos;
 					while (x != nil_Node) {
 						y = x;
-						/* if (val.first == x->value.first) { //compare keys
-							this->deleteElement(newNode);
-							return ft::pair<iterator, bool>(iterator(x, nil_Node), false);
-						} */
 						if (__comp(newNode->value, x->value))
 							x = x->left;
 						else 
@@ -285,10 +326,10 @@ namespace ft {
 						y->left = newNode;
 					else
 						y->right = newNode;
-					ins = ft::pair<iterator, bool>(iterator(newNode, nil_Node), true);
+					ins = ft::pair<iterator, bool>(iterator(newNode, nil_Node), _RED);
 					insert_fixup(newNode);
 				}
-				nil_Node->left = root; // for end()
+				nil_Node->left = root;
 				nil_Node->right = root;
 				nil_Node->parent = nil_Node;
 				root->parent = nil_Node;
@@ -297,7 +338,7 @@ namespace ft {
 
 			}
 
-			iterator insert(iterator position, const T& val) {
+			iterator insert(const_iterator position, const T& val) {
 
 				(void)position;
 				return (this->insert(val)).first;
@@ -422,45 +463,11 @@ namespace ft {
 				return const_reverse_iterator(begin());
 			}
 
-			void erase(iterator position) {
-				if (__size == 0)
+			void	erase(const_iterator position) {
+				if (__size == 0) {
 					return ;
-				pointer z = position.base(), x, y, to_delete = z;
-
-				y = z;
-				bool y_original_color = y->color;
-				if (z->left == nil_Node) {
-					x = z->right;
-					transplant(z, z->right);
-				} else if (z->right == nil_Node) {
-					x = z->left;
-					transplant(z, z->left);
-				} else {
-					y = tree_minimum(z->right);
-					y_original_color = y->color;
-					x = y->right;
-					if (y->parent == z)
-						x->parent = y;
-					else {
-						transplant(y, y->right);
-						y->right = z->right;
-						y->right->parent = y;
-					}
-					transplant(z, y);
-					y->left = z->left;
-					y->left->parent = y;
-					y->color = z->color;
 				}
-				if (y_original_color == false)
-					deleteFix(x);
-				deleteElement(to_delete);
-				__size--;
-				if (__size == 0)
-					root = nil_Node;
-				nil_Node->parent = nil_Node;
-				nil_Node->left = root; // for end()
-				nil_Node->right = root;
-				root->parent = nil_Node;
+				erase_node(position);
 			}
 
 			void	swap(RBTree& x) {

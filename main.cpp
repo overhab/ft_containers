@@ -16,9 +16,15 @@ class Testing {
 		Testing() : string("Default"), cheeky_pair() {}
 		Testing(const SECOND_TYPE & __str, const pair_type & __pr) : string(__str), cheeky_pair(__pr) {}
 		~Testing() {}
-		const SECOND_TYPE & getString() { return this->string; }
+		const SECOND_TYPE & getString() const { return this->string; }
 		void				setString(const SECOND_TYPE & __str) { this->string = __str; }
+
+		friend bool operator<(const Testing&, const Testing&);
 };
+
+bool operator<(const Testing& lhs, const Testing& rhs) {
+	return lhs.getString() < rhs.getString();
+}
 
 bool	file_diff( void ) {
 	bool flag = true;
@@ -84,6 +90,26 @@ void s_printMap(std::map<T, W> const &  containter, bool print = true, const std
 		typename std::map<T, W>::const_iterator it = containter.begin(), ite =	 containter.end();
 		for (; it != ite; ++it)
 			std::cout << it->first << " " << it->second << "\n";
+	}	
+}
+
+template <class T>
+void printSet(NAMESPACE::set<T> const &  containter, bool print = true, const std::string &prefix = "NULL") {
+	std::cout << prefix << ": size = [" << containter.size() << "]" << std::endl;
+	if (print) {
+		typename NAMESPACE::set<T>::const_iterator it = containter.begin(), ite =	 containter.end();
+		for (; it != ite; ++it)
+			std::cout << *it << "\n";
+	}	
+}
+
+template <class T>
+void s_printSet(std::set<T> const &  containter, bool print = true, const std::string &prefix = "NULL") {
+	std::cout << prefix << ": size = [" << containter.size() << "]" << std::endl;
+	if (print) {
+		typename std::set<T>::const_iterator it = containter.begin(), ite =	 containter.end();
+		for (; it != ite; ++it)
+			std::cout << *it << "\n";
 	}	
 }
 
@@ -271,6 +297,108 @@ void	s_vector_Tests( std::size_t _cap = 2, bool _nspace = false ) {
 	}
 }
 
+void	vector_TestsXX( std::size_t _cap = 2, bool _nspace = false ) {
+	std::string __prefix("ft");
+	if (_nspace) {
+		__prefix = "std";
+	}
+	const std::size_t __size = 10 * _cap;
+	std::cout << GREEN << "======" << __prefix << "::VECTOR XX TESTS OF SIZE = [" << CYAN << __size << GREEN <<"]======"<< RESET << std::endl;
+	std::ofstream ftfile;
+	std::string filename = __prefix + "_output.txt";
+	ftfile.open(filename.c_str());
+	struct timeval	ft_begin, ft_end;
+	gettimeofday(&ft_begin, 0);
+	NAMESPACE::vector<FIRST_TYPE>	xxx_vector;
+	for (int i = 0; i < 30; i++) 
+		xxx_vector.push_back(i + 222);
+	NAMESPACE::vector<ft::vector<FIRST_TYPE> > ft_cont;
+	for (std::size_t i = 0; i < __size; i++) {
+		ft_cont.push_back(xxx_vector);
+	}
+	std::cout << "ft_cont: size = " << ft_cont.size() << " capacity = " << ft_cont.capacity() << std::endl;
+	std::cout << "xxx_vector: size = " << xxx_vector.size() << " capacity = " << xxx_vector.capacity() << std::endl;
+	for (std::size_t i = 0; i < ft_cont.size(); i++) {
+		try {
+			ftfile << ft_cont[i].at(i) << " ";
+		} catch (std::exception &e) {
+			std::cout << e.what() << std::endl;
+			break ;
+		}
+	}
+	ft_cont.erase(ft_cont.begin());
+	ft_cont.erase(ft_cont.begin() + 2);
+	ft_cont.erase(ft_cont.begin());
+	ft_cont.erase(ft_cont.begin());
+	ft_cont.resize(3);
+	std::cout << "ft_cont after resize: size = " << ft_cont.size() << " capacity = " << ft_cont.capacity() << std::endl;
+	std::cout << "xxx_vector after resize (should not chage): size = " << xxx_vector.size() << " capacity = " << xxx_vector.capacity() << std::endl;
+	ftfile.close();
+	gettimeofday(&ft_end, 0);
+	std::cout << __prefix << " VECTOR TIME: " << YELLOW << std::fixed << calculate_time(ft_end, ft_begin) << RESET <<  std::endl;
+
+	if (_nspace) {
+		if (file_diff()) {
+			std::cout << GREEN << "OK";
+		} else {
+			std::cout << RED << "FAIL";
+		}
+		std::cout << RESET << std::endl;	
+		system("rm std_output.txt ft_output.txt");
+	}
+}
+
+void	s_vector_TestsXX( std::size_t _cap = 2, bool _nspace = false ) {
+	std::string __prefix("ft");
+	if (_nspace) {
+		__prefix = "std";
+	}
+	const std::size_t __size = 10 * _cap;
+	std::cout << GREEN << "======" << __prefix << "::VECTOR XX TESTS OF SIZE = [" << CYAN << __size << GREEN <<"]======"<< RESET << std::endl;
+	std::ofstream ftfile;
+	std::string filename = __prefix + "_output.txt";
+	ftfile.open(filename.c_str());
+	struct timeval	ft_begin, ft_end;
+	gettimeofday(&ft_begin, 0);
+
+	std::vector<FIRST_TYPE>	xxx_vector;
+	for (int i = 0; i < 30; i++) 
+		xxx_vector.push_back(i + 222);
+	std::vector<std::vector<FIRST_TYPE> > ft_cont;
+	for (std::size_t i = 0; i < __size; i++)
+		ft_cont.push_back(xxx_vector);
+	std::cout << "ft_cont: size = " << ft_cont.size() << " capacity = " << ft_cont.capacity() << std::endl;
+	std::cout << "xxx_vector: size = " << xxx_vector.size() << " capacity = " << xxx_vector.capacity() << std::endl;
+	for (std::size_t i = 0; i < ft_cont.size(); i++) {
+		try {
+			ftfile << ft_cont[i].at(i) << " ";
+		} catch (std::exception &e) {
+			std::cout << e.what() << std::endl;
+			break ;
+		}
+	}
+	ft_cont.erase(ft_cont.begin());
+	ft_cont.erase(ft_cont.begin() + 2);
+	ft_cont.erase(ft_cont.begin());
+	ft_cont.erase(ft_cont.begin());
+	ft_cont.resize(3);
+	std::cout << "ft_cont after resize: size = " << ft_cont.size() << " capacity = " << ft_cont.capacity() << std::endl;
+	std::cout << "xxx_vector after resize (should not chage): size = " << xxx_vector.size() << " capacity = " << xxx_vector.capacity() << std::endl;
+	ftfile.close();
+	gettimeofday(&ft_end, 0);
+	std::cout << __prefix << " VECTOR TIME: " << YELLOW << std::fixed << calculate_time(ft_end, ft_begin) << RESET <<  std::endl;
+
+	if (_nspace) {
+		if (file_diff()) {
+			std::cout << GREEN << "OK";
+		} else {
+			std::cout << RED << "FAIL";
+		}
+		std::cout << RESET << std::endl;	
+		system("rm std_output.txt ft_output.txt");
+	}
+}
+
 void	map_Tests( std::size_t _cap = 2, bool _nspace = false ) {
 	typedef NAMESPACE::map<FIRST_TYPE, SECOND_TYPE>::value_type T3;
 	typedef NAMESPACE::map<FIRST_TYPE, SECOND_TYPE>::const_iterator it_type;
@@ -411,6 +539,322 @@ void	s_map_Tests( std::size_t _cap = 2, bool _nspace = false ) {
 	}
 }
 
+void	map_TestsXX( std::size_t _cap = 2, bool _nspace = false ) {
+	typedef NAMESPACE::map<FIRST_TYPE, Testing>::value_type T3;
+	typedef NAMESPACE::map<FIRST_TYPE, Testing>::const_iterator it_type;
+
+	std::string __prefix("ft");
+	if (_nspace) {
+		__prefix = "std";
+	}
+	const std::size_t __size = 10 * _cap;
+	std::cout << GREEN << "======" << __prefix << "::MAP XX TESTS OF SIZE = [" << CYAN << __size << GREEN <<"]======"<< RESET << std::endl;
+	std::ofstream ftfile;
+	std::string filename = __prefix + "_output.txt";
+	ftfile.open(filename.c_str());
+	struct timeval	ft_begin, ft_end;
+	gettimeofday(&ft_begin, 0);
+
+	Testing cheecky_class("choo", PR_TYPE(std::vector<FIRST_TYPE>(10, 10), ft::vector<FIRST_TYPE>(10, 10)));
+
+	NAMESPACE::map<FIRST_TYPE, Testing> ft_cont;
+	std::cout << "map size = " << ft_cont.size() << std::endl;
+
+	for (std::size_t i = 0; i < __size; i++)
+		ft_cont.insert(T3(i, cheecky_class));
+
+	for(std::size_t i = 0; i < __size / 2; i++) {
+		it_type it = ft_cont.find(i);
+		ftfile << it->first << " " << it->second.getString() << " ";
+		ft_cont.erase(it->first);
+	}
+	std::cout << "map size = " << ft_cont.size() << std::endl;
+	ft_cont.clear();
+	std::cout << "map size = " << ft_cont.size() << std::endl;
+
+	ftfile.close();
+	gettimeofday(&ft_end, 0);
+	std::cout << __prefix << " MAP TIME: " << YELLOW << std::fixed << calculate_time(ft_end, ft_begin) << RESET <<  std::endl;
+
+	if (_nspace) {
+		if (file_diff()) {
+			std::cout << GREEN << "OK";
+		} else {
+			std::cout << RED << "FAIL";
+		}
+		std::cout << RESET << std::endl;		
+		system("rm std_output.txt ft_output.txt");
+	}
+}
+
+void	s_map_TestsXX( std::size_t _cap = 2, bool _nspace = false ) {
+	typedef std::map<FIRST_TYPE, Testing>::value_type T3;
+	typedef std::map<FIRST_TYPE, Testing>::const_iterator it_type;
+
+	std::string __prefix("ft");
+	if (_nspace) {
+		__prefix = "std";
+	}
+	const std::size_t __size = 10 * _cap;
+	std::cout << GREEN << "======" << __prefix << "::MAP XX TESTS OF SIZE = [" << CYAN << __size << GREEN <<"]======"<< RESET << std::endl;
+	std::ofstream ftfile;
+	std::string filename = __prefix + "_output.txt";
+	ftfile.open(filename.c_str());
+	struct timeval	ft_begin, ft_end;
+	gettimeofday(&ft_begin, 0);
+
+	Testing cheecky_class("choo", PR_TYPE(std::vector<FIRST_TYPE>(10, 10), ft::vector<FIRST_TYPE>(10, 10)));
+
+	std::map<FIRST_TYPE, Testing> ft_cont;
+	std::cout << "map size = " << ft_cont.size() << std::endl;
+
+	for (std::size_t i = 0; i < __size; i++)
+		ft_cont.insert(T3(i, cheecky_class));
+
+	for(std::size_t i = 0; i < __size / 2; i++) {
+		it_type it = ft_cont.find(i);
+		ftfile << it->first << " " << it->second.getString() << " ";
+		ft_cont.erase(it->first);
+	}
+	std::cout << "map size = " << ft_cont.size() << std::endl;
+	ft_cont.clear();
+	std::cout << "map size = " << ft_cont.size() << std::endl;
+
+	ftfile.close();
+	gettimeofday(&ft_end, 0);
+	std::cout << __prefix << " MAP TIME: " << YELLOW << std::fixed << calculate_time(ft_end, ft_begin) << RESET <<  std::endl;
+
+	if (_nspace) {
+		if (file_diff()) {
+			std::cout << GREEN << "OK";
+		} else {
+			std::cout << RED << "FAIL";
+		}
+		std::cout << RESET << std::endl;		
+		system("rm std_output.txt ft_output.txt");
+	}
+}
+
+void	set_Tests( std::size_t _cap = 2, bool _nspace = false ) {
+	typedef NAMESPACE::set<FIRST_TYPE>::value_type T3;
+	typedef NAMESPACE::set<FIRST_TYPE>::const_iterator it_type;
+
+	std::string __prefix("ft");
+	if (_nspace) {
+		__prefix = "std";
+	}
+	const std::size_t __size = 100 * _cap;
+	std::cout << GREEN << "======" << __prefix << "::set TESTS OF SIZE = [" << CYAN << __size << GREEN <<"]======"<< RESET << std::endl;
+	std::ofstream ftfile;
+	std::string filename = __prefix + "_output.txt";
+	ftfile.open(filename.c_str());
+	struct timeval	ft_begin, ft_end;
+	gettimeofday(&ft_begin, 0);
+
+	NAMESPACE::set<FIRST_TYPE> ft_cont;
+	printSet(ft_cont, false, __prefix + "_CONT");
+	std::list<T3> lst;
+
+	for (std::size_t i = 0; i < __size; i++) {
+		lst.push_back(i);
+	}
+	ft_cont.insert(lst.begin(), lst.end());
+
+	for(std::size_t i = 0; i < __size / 2; i++) {
+		it_type it = ft_cont.find(i);
+		ftfile << *it << " ";
+		ft_cont.erase(*it);
+	}
+	printSet(ft_cont, false, __prefix + "_CONT AFTER ERASE (should be half)");
+	NAMESPACE::set<FIRST_TYPE> copy_test(ft_cont);
+	printSet(copy_test, false, __prefix + "COPY");
+	if (ft_cont == copy_test) {
+		std::cout << GREEN << "EQUAL";
+	} else std::cout << RED << "NOT EQUAL";
+	std::cout << RESET << std::endl;
+	ft_cont.clear();
+	ft_cont.insert(222);
+	ft_cont.insert(423);
+	ft_cont.insert(-121);
+	ft_cont.insert(222);
+	ft_cont.insert(890009);
+	printSet(ft_cont, true, __prefix + "_CONT PRE ASSIGNMENT");
+	copy_test = ft_cont;
+	printSet(copy_test, true, __prefix + "COPY AFTER ASSIGNMENT");
+	if (ft_cont == copy_test) {
+		std::cout << GREEN << "EQUAL";
+	} else std::cout << RED << "NOT EQUAL";
+	std::cout << RESET << std::endl;
+	ft_cont.clear();
+	copy_test.clear();
+	printSet(ft_cont, false, __prefix + "_CONT CLEAN");
+	printSet(copy_test, false, "COPY CLEAN");
+
+	ftfile.close();
+	gettimeofday(&ft_end, 0);
+	std::cout << __prefix << " set TIME: " << YELLOW << std::fixed << calculate_time(ft_end, ft_begin) << RESET <<  std::endl;
+
+	if (_nspace) {
+		if (file_diff()) {
+			std::cout << GREEN << "OK";
+		} else {
+			std::cout << RED << "FAIL";
+		}
+		std::cout << RESET << std::endl;		
+		system("rm std_output.txt ft_output.txt");
+	}
+}
+
+void	s_set_Tests( std::size_t _cap = 2, bool _nspace = false ) {
+	typedef std::set<FIRST_TYPE>::value_type T3;
+	typedef std::set<FIRST_TYPE>::const_iterator it_type;
+
+	std::string __prefix("ft");
+	if (_nspace) {
+		__prefix = "std";
+	}
+	const std::size_t __size = 100 * _cap;
+	std::cout << GREEN << "======" << __prefix << "::set TESTS OF SIZE = [" << CYAN << __size << GREEN <<"]======"<< RESET << std::endl;
+	std::ofstream ftfile;
+	std::string filename = __prefix + "_output.txt";
+	ftfile.open(filename.c_str());
+	struct timeval	ft_begin, ft_end;
+	gettimeofday(&ft_begin, 0);
+
+	std::set<FIRST_TYPE> ft_cont;
+	s_printSet(ft_cont, false, __prefix + "_CONT");
+	std::list<T3> lst;
+
+	for (std::size_t i = 0; i < __size; i++) {
+		lst.push_back(i);
+	}
+	ft_cont.insert(lst.begin(), lst.end());
+
+	for(std::size_t i = 0; i < __size / 2; i++) {
+		it_type it = ft_cont.find(i);
+		ftfile << *it << " ";
+		ft_cont.erase(*it);
+	}
+	s_printSet(ft_cont, false, __prefix + "_CONT AFTER ERASE (should be half)");
+	std::set<FIRST_TYPE> copy_test(ft_cont);
+	s_printSet(copy_test, false, __prefix + "COPY");
+	if (ft_cont == copy_test) {
+		std::cout << GREEN << "EQUAL";
+	} else std::cout << RED << "NOT EQUAL";
+	std::cout << RESET << std::endl;
+	ft_cont.clear();
+	ft_cont.insert(222);
+	ft_cont.insert(423);
+	ft_cont.insert(-121);
+	ft_cont.insert(222);
+	ft_cont.insert(890009);
+	s_printSet(ft_cont, true, __prefix + "_CONT PRE ASSIGNMENT");
+	copy_test = ft_cont;
+	s_printSet(copy_test, true, __prefix + "COPY AFTER ASSIGNMENT");
+	if (ft_cont == copy_test) {
+		std::cout << GREEN << "EQUAL";
+	} else std::cout << RED << "NOT EQUAL";
+	std::cout << RESET << std::endl;
+	ft_cont.clear();
+	copy_test.clear();
+	s_printSet(ft_cont, false, __prefix + "_CONT CLEAN");
+	s_printSet(copy_test, false, "COPY CLEAN");
+
+	ftfile.close();
+	gettimeofday(&ft_end, 0);
+	std::cout << __prefix << " set TIME: " << YELLOW << std::fixed << calculate_time(ft_end, ft_begin) << RESET <<  std::endl;
+
+	if (_nspace) {
+		if (file_diff()) {
+			std::cout << GREEN << "OK";
+		} else {
+			std::cout << RED << "FAIL";
+		}
+		std::cout << RESET << std::endl;		
+		system("rm std_output.txt ft_output.txt");
+	}
+}
+
+void	set_TestsXX( std::size_t _cap = 2, bool _nspace = false ) {
+	std::string __prefix("ft");
+	if (_nspace) {
+		__prefix = "std";
+	}
+	const std::size_t __size = 10 * _cap;
+	std::cout << GREEN << "======" << __prefix << "::set XX TESTS OF SIZE = [" << CYAN << __size << GREEN <<"]======"<< RESET << std::endl;
+	std::ofstream ftfile;
+	std::string filename = __prefix + "_output.txt";
+	ftfile.open(filename.c_str());
+	struct timeval	ft_begin, ft_end;
+	gettimeofday(&ft_begin, 0);
+
+	Testing cheecky_class("choo", PR_TYPE(std::vector<FIRST_TYPE>(10, 10), ft::vector<FIRST_TYPE>(10, 10)));
+
+	NAMESPACE::set<Testing> ft_cont;
+	std::cout << "set size = " << ft_cont.size() << std::endl;
+
+	for (std::size_t i = 0; i < __size; i++)
+		ft_cont.insert(cheecky_class);
+	std::cout << "set size (should be one) = " << ft_cont.size() << std::endl;
+	ftfile << ft_cont.begin()->getString() << " ";
+	ft_cont.clear();
+	std::cout << "set size = " << ft_cont.size() << std::endl;
+
+	ftfile.close();
+	gettimeofday(&ft_end, 0);
+	std::cout << __prefix << " set TIME: " << YELLOW << std::fixed << calculate_time(ft_end, ft_begin) << RESET <<  std::endl;
+
+	if (_nspace) {
+		if (file_diff()) {
+			std::cout << GREEN << "OK";
+		} else {
+			std::cout << RED << "FAIL";
+		}
+		std::cout << RESET << std::endl;		
+		system("rm std_output.txt ft_output.txt");
+	}
+}
+
+void	s_set_TestsXX( std::size_t _cap = 2, bool _nspace = false ) {
+	std::string __prefix("ft");
+	if (_nspace) {
+		__prefix = "std";
+	}
+	const std::size_t __size = 10 * _cap;
+	std::cout << GREEN << "======" << __prefix << "::set XX TESTS OF SIZE = [" << CYAN << __size << GREEN <<"]======"<< RESET << std::endl;
+	std::ofstream ftfile;
+	std::string filename = __prefix + "_output.txt";
+	ftfile.open(filename.c_str());
+	struct timeval	ft_begin, ft_end;
+	gettimeofday(&ft_begin, 0);
+
+	Testing cheecky_class("choo", PR_TYPE(std::vector<FIRST_TYPE>(10, 10), ft::vector<FIRST_TYPE>(10, 10)));
+
+	std::set<Testing> ft_cont;
+	std::cout << "set size = " << ft_cont.size() << std::endl;
+
+	for (std::size_t i = 0; i < __size; i++)
+		ft_cont.insert(cheecky_class);
+	std::cout << "set size (should be one) = " << ft_cont.size() << std::endl;
+	ftfile << ft_cont.begin()->getString() << " ";
+	ft_cont.clear();
+	std::cout << "set size = " << ft_cont.size() << std::endl;
+
+	ftfile.close();
+	gettimeofday(&ft_end, 0);
+	std::cout << __prefix << " set TIME: " << YELLOW << std::fixed << calculate_time(ft_end, ft_begin) << RESET <<  std::endl;
+
+	if (_nspace) {
+		if (file_diff()) {
+			std::cout << GREEN << "OK";
+		} else {
+			std::cout << RED << "FAIL";
+		}
+		std::cout << RESET << std::endl;		
+		system("rm std_output.txt ft_output.txt");
+	}
+}
+
 int main(void) {
 
 	stack_Tests();
@@ -428,6 +872,28 @@ int main(void) {
 	s_map_Tests(4, true);
 	map_Tests(20);
 	s_map_Tests(20, true);
+	set_Tests();
+	s_set_Tests(2, true);
+	set_Tests(4);
+	s_set_Tests(4, true);
+	set_Tests(20);
+	s_set_Tests(20, true);
+
+
+	vector_TestsXX();
+	s_vector_TestsXX(2, true);
+	vector_TestsXX(8);
+	s_vector_TestsXX(8, true);
+
+	map_TestsXX();
+	s_map_TestsXX(2, true);
+	map_TestsXX(4);
+	s_map_TestsXX(4, true);
+
+	set_TestsXX();
+	s_set_TestsXX(2, true);
+	set_TestsXX(4);
+	s_set_TestsXX(4, true);
 
 	return 0;
 }
